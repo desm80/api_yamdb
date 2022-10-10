@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
+from djoser.views import UserViewSet
 
 from .models import User
 from .serializers import UserSerializer
@@ -9,6 +10,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = PageNumberPagination
+    page_number = 5
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', instance.email)
