@@ -22,6 +22,6 @@ class Comment(models.Model):
     pass
 
 
-class User(AbstractUser):
-    pass
+# class User(AbstractUser):
+#     pass
 
