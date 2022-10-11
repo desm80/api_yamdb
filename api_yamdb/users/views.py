@@ -14,6 +14,8 @@ from rest_framework_simplejwt.views import TokenViewBase
 from .serializers import UserSerializer, TokenObtainPairSerializer, \
     UserSignUpSerializer
 
+User = get_user_model()
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
@@ -35,14 +37,15 @@ class UserSignUpView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        token = secrets.token_urlsafe()
-        user, _ = get_user_model().objects.get_or_create(
+        user = User.objects.get_or_create(
             username=serializer.data.get('username'),
             email=serializer.data.get('email'),
-            confirmation_code=token
+            # confirmation_code=token
         )
-        if user:
-            get_user_model().objects.update(user, confirmation_code=token)
+        token = secrets.token_urlsafe()
+        # if user:
+        #     User.objects.update(user, confirmation_code=token)
+        user.confirmation_code = token
         message = (
             f'Код подтверждения для продолжения регистрации - {token}'
         )
