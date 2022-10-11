@@ -41,6 +41,8 @@ class UserSignUpView(CreateAPIView):
             email=serializer.data.get('email'),
             confirmation_code=token
         )
+        if user:
+            get_user_model().objects.update(user, confirmation_code=token)
         message = (
             f'Код подтверждения для продолжения регистрации - {token}'
         )
@@ -50,7 +52,8 @@ class UserSignUpView(CreateAPIView):
                 subject='Регистрация на сайте',
                 message=message,
                 from_email=settings.MAILING_EMAIL,
-                recipient_list=[user.email]
+                recipient_list=[user.email],
+                fail_silently=False,
             )
             return Response(serializer.data, status=status.HTTP_200_OK)
         except SMTPResponseException:
