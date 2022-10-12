@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from djoser.serializers import UserSerializer
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
@@ -25,20 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
-# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-#
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#
-#         # Add custom claims
-#         token['username'] = user.username
-#         token['email'] = user.email
-#         # ...
-#
-#         return token
-
-
 class TokenObtainPairSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     confirmation_code = serializers.CharField(required=True)
@@ -56,11 +40,9 @@ class TokenObtainPairSerializer(serializers.Serializer):
         return data
 
 
-class UserSignUpSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('email', 'username')
+class UserSignUpSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=254, required=True)
+    username = serializers.CharField(required=True)
 
     def validate_username(self, value):
         if value == 'me':
