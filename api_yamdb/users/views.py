@@ -4,11 +4,11 @@ from smtplib import SMTPResponseException
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.db import IntegrityError
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
-from djoser.views import UserViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
@@ -55,15 +55,22 @@ class UserSignUpView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = User.objects.get_or_create(
-            username=serializer.data.get('username'),
-            email=serializer.data.get('email'),
-            # confirmation_code=token
-        )
         token = secrets.token_urlsafe()
-        # if user:
-        #     User.objects.update(user, confirmation_code=token)
+        try:
+            user = User.objects.get_or_create(
+                email=serializer.data.get('email'),
+                username=serializer.data.get('username'),
+                # confirmation_code=token
+            )[0]
+        except IntegrityError:
+            return Response(
+                data={
+                    'error': 'Такой пользователь уже зарегистрирован!',
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         user.confirmation_code = token
+        user.save()
         message = (
             f'Код подтверждения для продолжения регистрации - {token}'
         )
@@ -85,4 +92,3 @@ class UserSignUpView(CreateAPIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
