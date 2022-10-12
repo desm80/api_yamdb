@@ -5,7 +5,7 @@ from djoser.serializers import UserSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
+User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -45,7 +45,7 @@ class TokenObtainPairSerializer(serializers.Serializer):
 
     def validate(self, value):
         user = get_object_or_404(
-            get_user_model(), username=value.get('username')
+            User, username=value.get('username')
         )
         if user.confirmation_code != value.get('confirmation_code'):
             raise serializers.ValidationError(
@@ -59,7 +59,7 @@ class TokenObtainPairSerializer(serializers.Serializer):
 class UserSignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ('email', 'username')
 
     def validate_username(self, value):
