@@ -18,6 +18,8 @@ from api.serializers import (CategoriesSerializer,
                          
 from rest_framework.pagination import LimitOffsetPagination
 
+from users.permissions import IsAdminOrReadOnly
+
 
 class TitlesViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(rating=Avg('reviews__score'))
