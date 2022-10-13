@@ -1,7 +1,7 @@
 import csv
 import os
 
-from reviews.models import Genre, Category, Title, Review, Comment, GenreTitle
+from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 from users.models import User
 
 path = "c:/dev/api_yamdb/api_yamdb/static/data"  # Set path of new directory

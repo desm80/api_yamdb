@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.db import IntegrityError
-from rest_framework import viewsets, filters, status
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -14,8 +14,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
 
 from .permissions import IsAdmin
-from .serializers import UserSerializer, TokenObtainPairSerializer, \
-    UserSignUpSerializer
+from .serializers import (TokenObtainPairSerializer, UserSerializer,
+                          UserSignUpSerializer)
 
 User = get_user_model()
 

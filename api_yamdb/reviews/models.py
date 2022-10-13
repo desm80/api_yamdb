@@ -1,10 +1,11 @@
-from django.contrib.auth import get_user_model  # пока оставлю так
-from django.db import models
+from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.db.models import UniqueConstraint
+
 from .validators import validate_year
 
-User = get_user_model()  # пока оставлю так, а то питон подчеркивает
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -51,12 +52,11 @@ class Genre(models.Model):
         return self.name
 
 
-
 class Title(models.Model):
     """Модель произведения."""
 
     name = models.CharField(
-        verbose_name="Название произведения", 
+        verbose_name="Название произведения",
         max_length=256,
         blank=False,
     )
@@ -106,8 +106,6 @@ class GenreTitle(models.Model):
         return f'{self.genre} {self.title}'
 
 
-
-
 class Review(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE,
                               related_name='reviews')
@@ -148,4 +146,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
-
