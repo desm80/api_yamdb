@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
 
+from .permissions import IsAdmin
 from .serializers import UserSerializer, TokenObtainPairSerializer, \
     UserSignUpSerializer
 
@@ -23,6 +24,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     pagination_class = PageNumberPagination
+    permission_classes = (IsAdmin,)
     page_number = 5
     lookup_field = 'username'
     filter_backends = (filters.SearchFilter,)
@@ -41,6 +43,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 partial=True
             )
             serializer.is_valid(raise_exception=True)
+            if user.is_user and request.data.get('role') != 'User':
+                return Response(serializer.data)
             serializer.save()
         return Response(serializer.data)
 
@@ -60,12 +64,11 @@ class UserSignUpView(CreateAPIView):
             user = User.objects.get_or_create(
                 email=serializer.data.get('email'),
                 username=serializer.data.get('username'),
-                # confirmation_code=token
             )[0]
         except IntegrityError:
             return Response(
                 data={
-                    'error': 'Такой пользователь уже зарегистрирован!',
+                    'error': 'Код подтверждения отправлен на e-mail!',
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
