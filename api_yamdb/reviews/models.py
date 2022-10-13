@@ -1,8 +1,10 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth import get_user_model  # пока оставлю так
 from django.db import models
-
-from users.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import UniqueConstraint
 from .validators import validate_year
+
+User = get_user_model()  # пока оставлю так, а то питон подчеркивает
 
 
 class Category(models.Model):
@@ -104,69 +106,46 @@ class GenreTitle(models.Model):
         return f'{self.genre} {self.title}'
 
 
+
+
 class Review(models.Model):
-    """Модель отзывов."""
-
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name="reviews",
-    )
+    title = models.ForeignKey(Title, on_delete=models.CASCADE,
+                              related_name='reviews')
     text = models.TextField()
-
     author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="reviews",
-    )
-    score = models.IntegerField(
-        'Оценка',
-        default=0,
-        validators=[
-            MaxValueValidator(10),
-            MinValueValidator(1)
-        ],
-    )
+        User, on_delete=models.CASCADE, related_name='reviews')
+    score = models.SmallIntegerField(validators=[
+        MinValueValidator(1),
+        MaxValueValidator(10)
+    ])
+
     pub_date = models.DateTimeField(
-        "Дата добавления", 
-        auto_now_add=True, 
-        db_index=True
-    )
+        'Дата добавления', auto_now_add=True, db_index=True)
 
     class Meta:
-        odering = ["-pub_date"]
-        verbose_name = "отзыв"
-        verbose_name_plural = "отзывы"
+        ordering = ("-pub_date",)
         constraints = [
-            models.UniqueConstraint(
-                fields=("author", "title"), name="unique_review"
-            )
+            UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique_review')
         ]
-
-
-class Comment(models.Model):
-    """Модель комментариев."""
-
-    review = models.ForeignKey(
-        Review,
-        on_delete=models.CASCADE,
-        related_name="comments"
-    )
-    text = models.TextField()
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="comments"
-    )
-    pub_date = models.DateTimeField(
-        "Дата добавления",
-        auto_now_add=True,
-        db_index=True
-    )
-
-    class Meta:
-        verbose_name = "коментарий"
-        verbose_name_plural = "комментариев"
 
     def __str__(self):
         return self.text
+
+
+class Comment(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE,
+                               related_name='comments')
+    text = models.TextField()
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments')
+    pub_date = models.DateTimeField(
+        'Дата добавления', auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ("-pub_date",)
+
+    def __str__(self):
+        return self.text
+
