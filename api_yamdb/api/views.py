@@ -15,6 +15,7 @@ from users.permissions import (IsAdminModeratorAuthorOrReadOnly,
 
 
 class TitlesViewSet(viewsets.ModelViewSet):
+    """Описание логики работы АПИ для эндпоинта Titles."""
     queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     serializer_class = TitlesSerializer
     permission_classes = [IsAdminOrReadOnly]
@@ -45,16 +46,19 @@ class ReviewGenreModelMixin(
 
 
 class CategoriesViewSet(ReviewGenreModelMixin):
+    """Описание логики работы АПИ для эндпоинта Categories."""
     queryset = Category.objects.all()
     serializer_class = CategoriesSerializer
 
 
 class GenresViewSet(ReviewGenreModelMixin):
+    """Описание логики работы АПИ для эндпоинта Genres."""
     queryset = Genre.objects.all()
     serializer_class = GenresSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    """Описание логики работы АПИ для эндпоинта Review."""
     serializer_class = ReviewSerializer
     pagination_class = CommentPagination
     permission_classes = (IsAdminModeratorAuthorOrReadOnly,)
@@ -70,6 +74,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Описание логики работы АПИ для эндпоинта Comment."""
     serializer_class = CommentSerializer
     pagination_class = CommentPagination
     permission_classes = (IsAdminModeratorAuthorOrReadOnly,)

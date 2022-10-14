@@ -4,6 +4,7 @@ from .models import User
 
 
 class UserAdmin(admin.ModelAdmin):
+    """Отображение модели User в Админке."""
     list_display = (
         'pk',
         'username',

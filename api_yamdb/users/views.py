@@ -21,6 +21,7 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """Описание логики работы АПИ для эндпоинта users."""
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     pagination_class = PageNumberPagination
@@ -34,6 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated],
             detail=False)
     def me(self, request, *args, **kwargs):
+        """Описание логики работы АПИ для эндпоинта users/me."""
         user = self.request.user
         serializer = self.get_serializer(user)
         if self.request.method == 'PATCH':
@@ -50,10 +52,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TokenObtainPairView(TokenViewBase):
+    """Описание логики работы АПИ для эндпоинта auth/token."""
     serializer_class = TokenObtainPairSerializer
 
 
 class UserSignUpView(CreateAPIView):
+    """Описание логики работы АПИ для эндпоинта auth/signup."""
     serializer_class = UserSignUpSerializer
 
     def create(self, request, *args, **kwargs):

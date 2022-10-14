@@ -2,6 +2,7 @@ from rest_framework import permissions
 
 
 class IsAdmin(permissions.BasePermission):
+    """Кастомный пермишен доступ только для Администратора."""
 
     def has_permission(self, request, view):
         return (
@@ -10,6 +11,8 @@ class IsAdmin(permissions.BasePermission):
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
+    """Кастомный пермишен доступ только для Администратора или на чтение
+    для неавторизованных пользователей."""
 
     def has_permission(self, request, view):
         return (request.method in permissions.SAFE_METHODS
@@ -18,6 +21,9 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 
 class IsAdminModeratorAuthorOrReadOnly(permissions.BasePermission):
+    """Кастомный пермишен доступ к изменению контента только для
+    Администратора, Модератора или Автора или на чтение
+    для неавторизованных пользователей."""
 
     def has_permission(self, request, view):
         return (
