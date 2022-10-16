@@ -79,6 +79,7 @@ class Title(models.Model):
         related_name="genre",
         verbose_name="Жанр произведения",
         blank=True,
+        db_index=True
     )
     category = models.ForeignKey(
         Category,
@@ -87,6 +88,7 @@ class Title(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        db_index=True,
     )
 
     class Meta:
@@ -108,6 +110,7 @@ class GenreTitle(models.Model):
 
 class Review(models.Model):
     """Модель Ревью."""
+
     title = models.ForeignKey(Title, on_delete=models.CASCADE,
                               related_name='reviews')
     text = models.TextField()
@@ -135,6 +138,7 @@ class Review(models.Model):
 
 class Comment(models.Model):
     """Модель Комментариев."""
+
     review = models.ForeignKey(Review, on_delete=models.CASCADE,
                                related_name='comments')
     text = models.TextField()

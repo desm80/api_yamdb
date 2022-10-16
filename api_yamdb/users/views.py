@@ -22,7 +22,8 @@ User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     """Описание логики работы АПИ для эндпоинта users."""
-    queryset = get_user_model().objects.all()
+
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = PageNumberPagination
     permission_classes = (IsAdmin,)
@@ -36,6 +37,7 @@ class UserViewSet(viewsets.ModelViewSet):
             detail=False)
     def me(self, request, *args, **kwargs):
         """Описание логики работы АПИ для эндпоинта users/me."""
+
         user = self.request.user
         serializer = self.get_serializer(user)
         if self.request.method == 'PATCH':
@@ -53,11 +55,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class TokenObtainPairView(TokenViewBase):
     """Описание логики работы АПИ для эндпоинта auth/token."""
+
     serializer_class = TokenObtainPairSerializer
 
 
 class UserSignUpView(CreateAPIView):
     """Описание логики работы АПИ для эндпоинта auth/signup."""
+
     serializer_class = UserSignUpSerializer
 
     def create(self, request, *args, **kwargs):
@@ -72,7 +76,8 @@ class UserSignUpView(CreateAPIView):
         except IntegrityError:
             return Response(
                 data={
-                    'error': 'Код подтверждения отправлен на e-mail!',
+                    'error': 'Такой пользователь уже зарегистрирован.'
+                             'Код подтверждения отправлен на e-mail!',
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )

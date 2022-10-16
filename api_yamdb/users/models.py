@@ -4,6 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     """Кастомная модель User."""
+
     ADMIN = 'admin'
     MODERATOR = 'moderator'
     USER = 'user'
@@ -15,7 +16,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=254, unique=True)
     role = models.CharField(max_length=10, choices=USER_ROLES, default='user')
     confirmation_code = models.CharField(blank=True, null=True, max_length=150)
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('username',)

@@ -5,6 +5,7 @@ from .models import User
 
 class UserAdmin(admin.ModelAdmin):
     """Отображение модели User в Админке."""
+
     list_display = (
         'pk',
         'username',
@@ -12,7 +13,7 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'email',
         'bio',
-        'role'
+        'role',
     )
     list_editable = (
         'first_name',

@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'first_name', 'last_name', 'bio', 'role'
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role',
         )
         lookup_field = 'username'
 
@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TokenObtainPairSerializer(serializers.Serializer):
     """Сериализатор для эндпоита auth/token."""
+
     username = serializers.CharField(required=True)
     confirmation_code = serializers.CharField(required=True)
 
@@ -44,6 +45,7 @@ class TokenObtainPairSerializer(serializers.Serializer):
 
 class UserSignUpSerializer(serializers.Serializer):
     """Сериализатор для эндпоита auth/signup."""
+
     email = serializers.EmailField(max_length=254, required=True)
     username = serializers.CharField(required=True)
 

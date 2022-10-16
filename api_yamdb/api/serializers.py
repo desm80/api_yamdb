@@ -77,6 +77,7 @@ class TitlesViewSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Ревью для произведений"""
+
     author = serializers.SlugRelatedField(
         slug_field='username',
         default=serializers.CurrentUserDefault(),
@@ -86,7 +87,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Review
-        read_only_fields = ['title']
+        read_only_fields = ('title',)
 
     def validate(self, data):
         if self.context['request'].method == 'POST':
